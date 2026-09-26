@@ -47,7 +47,7 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-const DEMO_USER = { name: "Sahasra", email: "demo@inclusiveforms.local" };
+const DEMO_USER = { name: "User", email: "demo@inclusiveforms.local" };
 const initialForms = [
   {
     id: "student-registration",
@@ -563,9 +563,14 @@ function Auth({ register = false, onLogin }) {
       return setError("Password must be at least 6 characters.");
     if (register && data.password !== data.confirm)
       return setError("Passwords do not match.");
+    const savedUser = JSON.parse(localStorage.getItem("if-user") || "null");
+
     const user = {
-      name: register ? data.name.trim() || DEMO_USER.name : DEMO_USER.name,
-      email: data.email || DEMO_USER.email,
+      name: register
+        ? data.name.trim() || DEMO_USER.name
+        : savedUser?.name || DEMO_USER.name,
+
+      email: data.email || savedUser?.email || DEMO_USER.email,
     };
     localStorage.setItem("if-user", JSON.stringify(user));
     onLogin(user);
@@ -695,8 +700,13 @@ function Auth({ register = false, onLogin }) {
             <button
               className="demo-button"
               onClick={() => {
-                localStorage.setItem("if-user", JSON.stringify(DEMO_USER));
-                onLogin(DEMO_USER);
+                const user = {
+                  name: DEMO_USER.name,
+                  email: DEMO_USER.email,
+                };
+
+                localStorage.setItem("if-user", JSON.stringify(user));
+                onLogin(user);
                 nav("/dashboard");
               }}
             >
@@ -755,7 +765,9 @@ function Shell({ children, user, onLogout }) {
         ))}
         <div className="side-bottom">
           <div className="side-user">
-            <div className="avatar">S</div>
+            <div className="avatar">
+              {user?.name?.charAt(0)?.toUpperCase() || "U"}
+            </div>
             <div>
               <b>{user.name}</b>
               <small>{user.email}</small>
@@ -779,7 +791,9 @@ function Shell({ children, user, onLogout }) {
               <span className="notif-dot"></span>
             </button>
             <div className="header-user">
-              <div className="avatar">S</div>
+              <div className="avatar">
+                {user?.name?.charAt(0)?.toUpperCase() || "U"}
+              </div>
               <span>{user.name}</span>
               <ChevronDown size={15} />
             </div>
@@ -2614,7 +2628,9 @@ function SettingsPage({ user }) {
         </div>
       </div>
       <div className="settings-card">
-        <div className="settings-avatar">S</div>
+        <div className="settings-avatar">
+          {user?.name?.charAt(0)?.toUpperCase() || "U"}
+        </div>
         <div>
           <h2>{user.name}</h2>
           <p>{user.email}</p>
