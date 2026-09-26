@@ -809,7 +809,7 @@ function Dashboard({ forms, save, setToast }) {
         <div>
           <div className="eyebrow">OVERVIEW</div>
           <h1>
-            Good morning, Sahasra <span>✦</span>
+            Good morning <span>✦</span>
           </h1>
           <p>Here’s what’s happening with your forms today.</p>
         </div>
